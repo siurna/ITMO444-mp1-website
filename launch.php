@@ -7,8 +7,8 @@ if (!empty($s3CreateBuckets = getS3BucketsNeeded())){
 		$s3BucketName = uniqid($awsPrefix.$createBucket, true);
 		echo "Creating bucket named {$s3BucketName}\n";
 		
-		$s3Client->createBucket(['Bucket' => $bucket]);
-		$s3Client->waitUntil('BucketExists', ['Bucket' => $bucket]);
+		$s3Client->createBucket(['Bucket' => $s3BucketName]);
+		$s3Client->waitUntil('BucketExists', ['Bucket' => $s3BucketName]);
 	}
 }
 
