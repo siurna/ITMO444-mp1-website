@@ -27,12 +27,24 @@ getRDShost();
 
 if ($rdsURL == "create new"){
 	$identifier = "mp1siurna".uniqid();
-
-	echo 'aws rds create-db-instance --db-instance-identifier '.$identifier.' --allocated-storage 5 --db-instance-class db.t2.micro --engine mysql --master-username tsiurna --master-user-password akmjljjl2048 --db-name mp1rdssiurna;		aws rds wait db-instance-available --db-instance-identifier '.$identifier;
  
-	//exec('aws rds create-db-instance --db-instance-identifier {$identifier} --allocated-storage 5 --db-instance-class db.t2.micro --engine mysql --master-username tsiurna --master-user-password akmjljjl2048 --db-name mp1rdssiurna;	aws rds wait db-instance-available --db-instance-identifier "{$identifier}"');
+	//shell_exec('aws rds create-db-instance --db-instance-identifier {$identifier} --allocated-storage 5 --db-instance-class db.t2.micro --engine mysql --master-username tsiurna --master-user-password akmjljjl2048 --db-name mp1rdssiurna;	aws rds wait db-instance-available --db-instance-identifier "{$identifier}"');
 
-	getRDShost();
+	$rdsClient->createDBInstance([
+		'AllocatedStorage' => 1,
+		'DBInstanceClass' => 'db.t2.micro',
+		'Engine' => 'MySQL',
+		'DBInstanceIdentifier' => $identifier,
+		'DBName' => 'mp1rdssiurna',
+		'MasterUserPassword' => 'tsiurna',
+		'MasterUsername' => 'akmjljjl2048',
+	]);
+
+	while ($rdsURL == "create new"){
+		sleep(3);
+		getRDShost();
+	}
+
 	$rdsConnection = new mysqli($rdsURL, "tsiurna", "akmjljjl2048");
 
     $rdsConnection->query("CREATE TABLE IF NOT EXISTS records (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, email VARCHAR(32), phone VARCHAR(32), s3-raw-url VARCHAR(32), s3-finished-url VARCHAR(32), status INT(1), reciept BIGINT)");
