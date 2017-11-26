@@ -1,19 +1,7 @@
 <?php
 include("init.php");
-$rdsURL = "create new";
 
-function getRDShost(){
-	global $rdsClient, $rdsURL;
-
-	$rdsInstances = $rdsClient->describeDBInstances();
-
-	foreach ($rdsInstances["DBInstances"] as $rds)
-		if (strpos($rds["DBInstanceIdentifier"], "mp1siurna") !== false){
-			$rdsURL = $rds["Endpoint"]["Address"];
-			return;
-		}
-}
-
+$rdsIdentifier = "mp1siurna".uniqid();
 getRDShost();
 
 if ($rdsURL == "create new"){ 
