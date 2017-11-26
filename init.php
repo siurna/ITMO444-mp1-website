@@ -1,24 +1,26 @@
 <?php
 	error_reporting(E_ALL);
 	require 'vendor/autoload.php';
+	$awsRegion = "us-east-1";
 
 	// S3 settings
+	/*
 	$s3 = new Aws\S3\S3Client([
-    'version' => '2013-06-18',
-    'region'  => 'us-west-2'
-]);
+	    'version' => '2014-10-31',
+	    'region'  => $awsRegion
+	]);
+	*/
 
 	// RDS settings
 	use Aws\Rds\RdsClient;
 
 	$rdsClient = new RdsClient([
-		'region' => 'us-east-1',
-		'version' => '2014-09-01'
+		'region' => $awsRegion,
+		'version' => '2014-10-31'
 	]);
 
 	$rdsIdentifier = "mp1siurna".uniqid();
 	$rdsURL = false;
-	$rdsRegion = "us-east-1";
 	
 	$rdsUser = "tsiurna";
 	$rdsPass = "akmjljjlnnv2018";
