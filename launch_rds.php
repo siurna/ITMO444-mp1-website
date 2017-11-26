@@ -28,7 +28,9 @@ getRDShost();
 if ($rdsURL == "create new"){
 	$identifier = "mp1siurna".uniqid();
 
-	echo exec('aws rds create-db-instance --db-instance-identifier {$identifier} --allocated-storage 5 --db-instance-class db.t2.micro --engine mysql --master-username tsiurna --master-user-password akmjljjl2048 --db-name mp1rdssiurna;	aws rds wait db-instance-available --db-instance-identifier "{$identifier}"');
+	echo 'aws rds create-db-instance --db-instance-identifier {$identifier} --allocated-storage 5 --db-instance-class db.t2.micro --engine mysql --master-username tsiurna --master-user-password akmjljjl2048 --db-name mp1rdssiurna;	aws rds wait db-instance-available --db-instance-identifier "{$identifier}"'
+
+	exec('aws rds create-db-instance --db-instance-identifier {$identifier} --allocated-storage 5 --db-instance-class db.t2.micro --engine mysql --master-username tsiurna --master-user-password akmjljjl2048 --db-name mp1rdssiurna;	aws rds wait db-instance-available --db-instance-identifier "{$identifier}"');
 
 	getRDShost();
 	$rdsConnection = new mysqli($rdsURL, "tsiurna", "akmjljjl2048");
