@@ -4,7 +4,7 @@
 
 	// S3 settings
 	$s3 = new Aws\S3\S3Client([
-    'version' => '2006-03-01',
+    'version' => '2013-06-18',
     'region'  => 'us-west-2'
 ]);
 

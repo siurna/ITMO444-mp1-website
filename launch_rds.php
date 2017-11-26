@@ -10,9 +10,7 @@ require("init.php");
 		'DBName' => $rdsDatabase,
 		'MasterUsername' => $rdsUser,
 		'MasterUserPassword' => $rdsPass,
-	]);
-
-	$rdsClient->waitUntil('DBInstanceAvailable', [
+	])->waitUntil('DBInstanceAvailable', [
 		'DBInstanceIdentifier' => $rdsIdentifier
 	]);
 
