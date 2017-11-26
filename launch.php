@@ -4,7 +4,7 @@ require("init.php");
 /* Sets up S3 buckets */
 if (!empty($s3CreateBuckets = getS3BucketsNeeded())){
 	foreach ($s3CreateBuckets as $createBucket) {
-		$s3BucketName = uniqid($awsPrefix.$createBucket, true);
+		$s3BucketName = uniqid($awsPrefix.$createBucket);
 		echo "Creating bucket named {$s3BucketName}\n";
 		
 		$s3Client->createBucket(['Bucket' => $s3BucketName]);
@@ -30,9 +30,8 @@ if (!getRDShost()){
 		'DBInstanceIdentifier' => $rdsIdentifier
 	]);
 
-	getRDShost();
+	connectToRDSInstance();
 
-	$rdsConnection = new mysqli($rdsURL, $rdsUser, $rdsPass, $rdsDatabase, 3306);
     $rdsConnection->query("CREATE TABLE IF NOT EXISTS records (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `email` VARCHAR(32), `phone` VARCHAR(32), `s3-raw-url` VARCHAR(32), `s3-finished-url` VARCHAR(32), `status` INT(1), `reciept` BIGINT);");
 }
 ?>

@@ -1,7 +1,7 @@
 <?php
-	error_reporting(E_ALL);
+	/* General AWS settings */
 	require 'vendor/autoload.php';
-	
+
 	$awsRegion = "us-east-1";
 	$awsPrefix = "siurna-";
 
@@ -12,7 +12,7 @@
 	    'region'  => $awsRegion
 	]);
 
-	$s3BucketsNeeded = array("color", "grayscale");
+	$s3BucketsNeeded = array("color-", "grayscale-");
 
 	function getS3BucketsNeeded(){
 		global $s3BucketsNeeded, $s3Client;
@@ -40,7 +40,7 @@
 		'version' => '2014-10-31'
 	]);
 
-	$rdsIdentifier = $awsPrefix.uniqid();
+	$rdsIdentifier = uniqid($awsPrefix);
 	$rdsURL = false;
 	
 	$rdsUser = "tsiurna";
@@ -59,5 +59,14 @@
 			}
 
 		return false;
+	}
+
+	function connectToRDSInstance(){
+		global $rdsConnection, $rdsURL, $rdsUser, $rdsPass, $rdsDatabase;
+		
+		getRDShost();
+		$rdsConnection = new mysqli($rdsURL, $rdsUser, $rdsPass, $rdsDatabase, 3306);
+
+		return true;
 	}
 ?>

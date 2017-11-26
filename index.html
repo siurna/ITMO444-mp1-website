@@ -1,12 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
-	<title>Index</title>
+	<link rel="stylesheet" href="https://bootswatch.com/4/sketchy/bootstrap.min.css">
+	<title>Gallery</title>
 
 	<style>
 		.container{
-			padding-top: 50px;
+			padding-top: 10%;
+			background-color: transparent;
+		}
+
+		body{
+			background-color: #f3f3f4;
+		}
+
+		.well{
+			border-radius: 4px;
+			background-color: white;
+			padding: 30px 30px 10px 30px;
+		}
+
+		hr{
+			opacity: 0.4;
 		}
 	</style>
 
@@ -14,12 +29,13 @@
 <body>
 	<div class="container">
 		<div class="row">
-			<div class="col-lg-12 text-center">
+			<div class="col-lg-8 offset-lg-2 text-center">
 				<div class="well">
-					<h1>Welcome to the gallery!</h1>
-					<hr/>
-					<a href="/gallery.php" class="btn btn-success btn-lg">Gallery</a>
-					<a href="/upload.php" class="btn btn-primary btn-md">Upload</a>
+					<h1>Welcome to the Gallery!</h1><br/>
+					<a href="/gallery.php" class="btn btn-success btn-lg">Visit gallery</a>
+					<a href="/upload.php" class="btn btn-primary btn-md">Upload a picture</a>
+						<hr/>
+					<p>Cloud Computing (ITMO 444)<br/>Mini Project 1 by Tomas Siurna</p> 
 				</div>
 			</div>
 		</div>
