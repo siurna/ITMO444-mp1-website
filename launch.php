@@ -1,7 +1,14 @@
 <?php
 require("init.php");
 
-// Sets up database
+/* Sets up S3 buckets */
+if (!empty($s3CreateBuckets = getS3BucketsNeeded())){
+	print_r($s3CreateBuckets);
+}
+
+die;
+
+/* Sets up RDS database */
 if (!getRDShost()){ 
 	$rdsClient->createDBInstance([
 		'AllocatedStorage' => 5,
