@@ -30,7 +30,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-8 offset-lg-2 text-center">
-				<?if (isset($_POST["email"])):?>
+				<?if (isset($_POST)):?>
 					<?print_r($_POST);?>
 				<?}?>
 
@@ -48,7 +48,7 @@
 					<form action="" method="POST">
 						<div class="row">
 							<div class="col-lg-6">
-								<input name="email" class="input-lg form-control" placeholder="Your email address">
+								<input type="email" name="email" class="input-lg form-control" placeholder="Your email address">
 							</div>
 
 							<div class="col-lg-6">
