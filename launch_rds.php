@@ -1,7 +1,8 @@
 <?php
 require("init.php");
 
-//if (!getRDShost()){ 
+// Sets up database
+if (!getRDShost()){ 
 	$rdsClient->createDBInstance([
 		'AllocatedStorage' => 5,
 		'DBInstanceClass' => 'db.t2.micro',
@@ -10,7 +11,9 @@ require("init.php");
 		'DBName' => $rdsDatabase,
 		'MasterUsername' => $rdsUser,
 		'MasterUserPassword' => $rdsPass,
-	])->waitUntil('DBInstanceAvailable', [
+	]);
+
+	$rdsClient->waitUntil('DBInstanceAvailable', [
 		'DBInstanceIdentifier' => $rdsIdentifier
 	]);
 
@@ -18,7 +21,5 @@ require("init.php");
 
 	$rdsConnection = new mysqli($rdsURL, $rdsUser, $rdsPass, $rdsDatabase, 3306);
     $rdsConnection->query("CREATE TABLE IF NOT EXISTS records (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `email` VARCHAR(32), `phone` VARCHAR(32), `s3-raw-url` VARCHAR(32), `s3-finished-url` VARCHAR(32), `status` INT(1), `reciept` BIGINT);");
-
-    print_r($rdsURL);
-//}
+}
 ?>
