@@ -32,7 +32,7 @@ if ($rdsURL == "create new"){
 	//shell_exec('aws rds create-db-instance --db-instance-identifier {$identifier} --allocated-storage 5 --db-instance-class db.t2.micro --engine mysql --master-username tsiurna --master-user-password akmjljjl2048 --db-name mp1rdssiurna;	aws rds wait db-instance-available --db-instance-identifier "{$identifier}"');
 
 	$rdsClient->createDBInstance([
-		'AllocatedStorage' => 1,
+		'AllocatedStorage' => 5,
 		'DBInstanceClass' => 'db.t2.micro',
 		'Engine' => 'MySQL',
 		'DBInstanceIdentifier' => $identifier,
