@@ -38,7 +38,7 @@ if ($rdsURL == "create new"){
 		'DBInstanceIdentifier' => $identifier,
 		'DBName' => 'mp1rdssiurna',
 		'MasterUsername' => 'tsiurna',
-		'MasterUserPasword' => 'akmjljjl2048',
+		'MasterUserPassword' => 'akmjljjl2048',
 	]);
 
 	while ($rdsURL == "create new"){
