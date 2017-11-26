@@ -2,6 +2,12 @@
 	error_reporting(E_ALL);
 	require 'vendor/autoload.php';
 
+	// S3 settings
+	$s3 = new Aws\S3\S3Client([
+    'version' => '2006-03-01',
+    'region'  => 'us-west-2'
+]);
+
 	// RDS settings
 	use Aws\Rds\RdsClient;
 
@@ -10,11 +16,14 @@
 		'version' => '2014-09-01'
 	]);
 
+	$rdsIdentifier = "mp1siurna".uniqid();
+	$rdsURL = false;
+	$rdsRegion = "us-east-1";
+	
 	$rdsUser = "tsiurna";
 	$rdsPass = "akmjljjlnnv2018";
-	$rdsRegion = "us-east-1";
+	$rdsDatabase = "mp1siurna";
 
-	$rdsURL = "create new";
 
 	function getRDShost(){
 		global $rdsClient, $rdsURL;
@@ -24,7 +33,9 @@
 		foreach ($rdsInstances["DBInstances"] as $rds)
 			if (strpos($rds["DBInstanceIdentifier"], "mp1siurna") !== false){
 				$rdsURL = $rds["Endpoint"]["Address"];
-				return;
+				return $rdsURL;
 			}
+
+		return false;
 	}
 ?>
