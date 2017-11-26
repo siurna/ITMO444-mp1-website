@@ -34,13 +34,13 @@
 				<?php print_r($_POST);?>
 				<?php print_r($_FILES);?>
 
-				<?php if (!getRDShost()):?>
+				<?php if (!getRDShost()){?>
 				<div class="alert alert-dismissible alert-warning" style="margin-bottom: 40px;">
 					<h4>Heads up!</h4>
 					<p>Database for this website is still being loaded, so upload capability might be restricted. Sorry for any inconveniences and please check again later!</p>
 					<p><a href="upload.php" class="btn btn-outline-info">Reload this page</a></p>
 				</div>
-				<?endif;?>
+				<?php endif;?>
 				
 				<div class="well">
 					<h1>Upload image</h1><hr/>

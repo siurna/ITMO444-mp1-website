@@ -14,21 +14,26 @@
 
 	$s3BucketsNeeded = array("color-", "grayscale-");
 
-	function getS3BucketsNeeded(){
-		global $s3BucketsNeeded, $s3Client;
+	function describeS3Bucket($nameNeeded){
+		global $s3Client;
 
-		$result = array();
 		$s3Buckets = $s3Client->listBuckets();
 
-		foreach ($s3BucketsNeeded as $bucketNeeded){
-			$bucketLacking = true;
-			foreach ($s3Buckets as $bucket)
-				if (strpos($bucket[0]["Name"], $bucketNeeded) !== false)
-					$bucketLacking = false;
+		foreach ($s3Buckets["Buckets"] as $bucket)
+			if (strpos($bucket[0]["Name"], $nameNeeded) !== false)
+				return $bucket[0]["Name"];
 
-			if ($bucketLacking)
+		return false;
+	}
+
+	function getS3BucketsNeeded(){
+		global $s3BucketsNeeded;
+
+		$result = array();
+
+		foreach ($s3BucketsNeeded as $bucketNeeded)
+			if (!describeS3Bucket($bucketNeeded))
 				array_push($result, $bucketNeeded);
-		}
 
 		return $result;
 	}
@@ -63,7 +68,7 @@
 
 	function connectToRDSInstance(){
 		global $rdsConnection, $rdsURL, $rdsUser, $rdsPass, $rdsDatabase;
-		
+
 		getRDShost();
 		$rdsConnection = new mysqli($rdsURL, $rdsUser, $rdsPass, $rdsDatabase, 3306);
 
