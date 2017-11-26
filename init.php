@@ -1,7 +1,9 @@
 <?php
 	error_reporting(E_ALL);
 	require 'vendor/autoload.php';
+	
 	$awsRegion = "us-east-1";
+	$awsPrefix = "siurna-";
 
 	/* S3 settings */
 	use Aws\S3\S3Client;
@@ -38,8 +40,7 @@
 		'version' => '2014-10-31'
 	]);
 
-	$rdsIdentifierPrefix = "siurna-";
-	$rdsIdentifier = $rdsIdentifierPrefix.uniqid();
+	$rdsIdentifier = $awsPrefix.uniqid();
 	$rdsURL = false;
 	
 	$rdsUser = "tsiurna";
@@ -52,7 +53,7 @@
 		$rdsInstances = $rdsClient->describeDBInstances();
 
 		foreach ($rdsInstances["DBInstances"] as $rds)
-			if (strpos($rds["DBInstanceIdentifier"], $rdsIdentifierPrefix) !== false){
+			if (strpos($rds["DBInstanceIdentifier"], $awsPrefix) !== false){
 				$rdsURL = $rds["Endpoint"]["Address"];
 				return $rdsURL;
 			}

@@ -3,7 +3,13 @@ require("init.php");
 
 /* Sets up S3 buckets */
 if (!empty($s3CreateBuckets = getS3BucketsNeeded())){
-	print_r($s3CreateBuckets);
+	foreach ($s3CreateBuckets as $createBucket) {
+		$s3BucketName = uniqid($awsPrefix.$createBucket, true);
+		echo "Creating bucket named {$s3BucketName}\n";
+		
+		$s3Client->createBucket(['Bucket' => $bucket]);
+		$s3Client->waitUntil('BucketExists', ['Bucket' => $bucket]);
+	}
 }
 
 die;
