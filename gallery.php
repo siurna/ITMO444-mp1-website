@@ -52,7 +52,8 @@
 							$picures = $rdsConnection->query("SELECT `s3-raw-url`, `s3-finished-url` FROM records;");
 
 							foreach ($picures as $p) {
-								print_r($p);
+								echo '<img src="'.$p["s3-raw-url"].'"/>';
+								echo '<img src="'.$p["s3-finished-url"].'"/>';
 							}
 						}
 					?>
