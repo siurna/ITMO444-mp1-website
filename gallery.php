@@ -20,13 +20,7 @@
 		body{
 			background-color: #f3f3f4;
 		}
-
-		.well{
-			border-radius: 4px;
-			background-color: white;
-			padding: 30px 30px 30px 30px;
-		}
-
+		
 		hr{
 			opacity: 0.4;
 		}
@@ -36,7 +30,7 @@
 <body>
 	<div class="container">
 		<div class="row">
-			<div class="col-lg-8 offset-lg-2 text-center">
+			<div class="col-lg-10 offset-lg-1 text-center">
 				<?php if (!getRDShost()):?>
 				<div class="alert alert-warning" style="margin-bottom: 40px;">
 					<h4>Heads up!</h4>
@@ -54,7 +48,7 @@
 							if (getRDShost()){
 								connectToRDSInstance();
 
-								$picures = $rdsConnection->query("SELECT `s3-raw-url`, `s3-finished-url` FROM records;");
+								$picures = $rdsConnection->query("SELECT `s3-raw-url`, `s3-finished-url` FROM records ORDER BY `id` DESC;");
 								$colorBucket = describeS3Bucket("color");
 								$bwBucket = describeS3Bucket("grayscale");
 
