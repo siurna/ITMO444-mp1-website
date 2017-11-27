@@ -20,7 +20,7 @@
 		body{
 			background-color: #f3f3f4;
 		}
-		
+
 		hr{
 			opacity: 0.4;
 		}
@@ -56,8 +56,11 @@
 									$colorImg = $s3Client->getCommand('GetObject', [ "Bucket" => $colorBucket, "Key" => $p["s3-raw-url"] ]);
 									$bwImg = $s3Client->getCommand('GetObject', [ "Bucket" => $bwBucket, "Key" => $p["s3-finished-url"] ]);
 
-									//echo '<img src="'..'"/>';
-									echo '<a href="'.$s3Client->createPresignedRequest($colorImg, '+1 day')->getUri().'" class="image" data-lightbox="'.$p["s3-raw-url"].'"><img style="width:100%" src="'.$s3Client->createPresignedRequest($bwImg, '+1 day')->getUri().'"/></a>';
+									echo "Image url: ";
+									print_r($s3Client->getObject(["Bucket" => $colorBucket, "Key" => $p["s3-raw-url"]]));
+									echo "<hr/>";
+
+									//echo '<a href="'.$s3Client->createPresignedRequest($colorImg, '+1 day')->getUri().'" class="image" data-lightbox="'.$p["s3-raw-url"].'"><img style="width:100%" src="'.$s3Client->createPresignedRequest($bwImg, '+1 day')->getUri().'"/></a>';
 								}
 							}
 						?>

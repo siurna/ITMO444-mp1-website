@@ -6,7 +6,7 @@
 		foreach ($s3CreateBuckets as $createBucket) {
 			$s3BucketName = uniqid($awsPrefix.$createBucket);
 			
-			$s3Client->createBucket(['Bucket' => $s3BucketName]);
+			$s3Client->createBucket(['Bucket' => $s3BucketName, "ACL" => 'public-read']); //public read only
 			$s3Client->waitUntil('BucketExists', ['Bucket' => $s3BucketName]);
 		}
 	}
