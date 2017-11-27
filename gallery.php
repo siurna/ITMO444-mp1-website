@@ -59,28 +59,27 @@
 				<?php endif;?>
 				
 				<div class="well">
-					<h1>Gallery</h1><hr/>
+					<h1>Gallery</h1> <a href="/upload.php" class="btn btn-primary btn-md">Upload a picture</a> <hr/>
 
-					<?php
-						if (getRDShost()){
-							connectToRDSInstance();
-
-							$picures = $rdsConnection->query("SELECT `s3-raw-url`, `s3-finished-url` FROM records;");
-							$colorBucket = describeS3Bucket("color");
-							$bwBucket = describeS3Bucket("grayscale");
-					?>
 					<div class="gallery row">
 						<div class="col-lg-3 image-dummy"></div>
-					<?php
-							foreach ($picures as $p) {
-								$colorImg = $s3Client->getCommand('GetObject', [ "Bucket" => $colorBucket, "Key" => $p["s3-raw-url"] ]);
-								$bwImg = $s3Client->getCommand('GetObject', [ "Bucket" => $bwBucket, "Key" => $p["s3-finished-url-url"] ]);
+						<?php
+							if (getRDShost()){
+								connectToRDSInstance();
 
-								echo '<img src="'.$s3Client->createPresignedRequest($colorImg, '+1 day')->getUri().'"/>';
-								echo '<img src="'.$s3Client->createPresignedRequest($bwImg, '+1 day')->getUri().'"/>';
+								$picures = $rdsConnection->query("SELECT `s3-raw-url`, `s3-finished-url` FROM records;");
+								$colorBucket = describeS3Bucket("color");
+								$bwBucket = describeS3Bucket("grayscale");
+
+								foreach ($picures as $p) {
+									$colorImg = $s3Client->getCommand('GetObject', [ "Bucket" => $colorBucket, "Key" => $p["s3-raw-url"] ]);
+									$bwImg = $s3Client->getCommand('GetObject', [ "Bucket" => $bwBucket, "Key" => $p["s3-finished-url"] ]);
+
+									echo '<img src="'.$s3Client->createPresignedRequest($colorImg, '+1 day')->getUri().'"/>';
+									echo '<img src="'.$s3Client->createPresignedRequest($bwImg, '+1 day')->getUri().'"/>';
+								}
 							}
-						}
-					?>
+						?>
 					</div>
 				</div>
 			</div>
