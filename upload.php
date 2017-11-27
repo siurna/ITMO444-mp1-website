@@ -3,7 +3,7 @@
 
 	/* Processing form submission */
 	if (isset($_FILES['image']['tmp_name'])){
-		$filename = uniqid("img-");
+		$filename = uniqid("img-").".";
 		$urlsUploaded = array();
 
 		$bwImage = imagecreatefrompng($_FILES['image']['tmp_name']);
@@ -12,18 +12,20 @@
 		$filesToUpload = array(
 			0 => array(
 				"Bucket" => describeS3Bucket("color"),
-				"Key" => $filename.".".pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION),
+				"Key" => $filename.pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION),
 				"SourceFile" => $_FILES['image']['tmp_name']
 			),
 			1 => array(
 				"Bucket" => describeS3Bucket("grayscale"),
-				"Key" => $filename.".png",
-				"SourceFile" => $bwImage
+				"Key" => $filename."png",
+				"SourceFile" => "/var/www/html/tmp_img/".$filename.".png"
 			)
 		);
 
 		foreach ($filesToUpload as $upload) {
-			$s3Client->putObject($upload);
+			$result = $s3Client->putObject($upload);
+			echo $result;
+			
 			unset($upload["SourceFile"]); // Prepare for a waiter
 			$s3Client->waitUntil('ObjectExists', $upload);
 
