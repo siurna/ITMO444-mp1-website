@@ -30,20 +30,6 @@
 		}
 	</style>
 
-	<script type="text/javascript">
-	$(document).ready(function(){
-	      var options =
-	      {
-	           srcNode: '.image',             // grid items (class, node)
-	           margin: '10px',             // margin in pixel, default: 0px
-	           width: $(".image-dummy").width()+"px",             // grid item width in pixel, default: 220px
-	           max_width: '',              // dynamic gird item width if specified, (pixel)
-	           resizable: true,            // re-layout if window resize
-	           transition: 'all 0.5s ease' // support transition for CSS3, default: all 0.5s ease
-	      }
-	      document.querySelector('.gallery').gridify(options);
-	})
-	</script>
 </head>
 <body>
 	<div class="container">
@@ -87,5 +73,19 @@
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/core.js"></script>
 	<script src="https://raw.githubusercontent.com/hongkhanh/gridify/master/javascript/gridify-min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+		      var options =
+		      {
+		           srcNode: '.image',             // grid items (class, node)
+		           margin: '10px',             // margin in pixel, default: 0px
+		           width: $(".image-dummy").width()+"px",             // grid item width in pixel, default: 220px
+		           max_width: '',              // dynamic gird item width if specified, (pixel)
+		           resizable: true,            // re-layout if window resize
+		           transition: 'all 0.5s ease' // support transition for CSS3, default: all 0.5s ease
+		      }
+		      $('.gallery').gridify(options);
+		});
+	</script>
 </body>
 </html>
