@@ -53,7 +53,7 @@
 	$rdsDatabase = "mp1siurna";
 
 	function getRDShost(){
-		global $rdsClient, $rdsURL;
+		global $rdsClient, $rdsURL, $awsPrefix;
 
 		$rdsInstances = $rdsClient->describeDBInstances();
 

@@ -1,9 +1,6 @@
 <?php
 	require("init.php");
 
-echo describeS3Bucket("color");
-die;
-
 	/* Processing form submission */
 	if (isset($_FILES['image']['tmp_name'])){
 		$colorBucket = describeS3Bucket("color");
@@ -20,17 +17,20 @@ die;
 		$colorUrl = $s3Client->getObjectUrl($colorBucket, ($filename.$extention));
 
 		// Generating BW image
-		ob_start();
-		imagepng(imagefilter(imagecreatefrompng($_FILES['image']['tmp_name']), IMG_FILTER_GRAYSCALE))
-		$bwImage = ob_get_clean();
+
+		$im = imagecreatefrompng($_FILES['image']['tmp_name']);
+    	imagepng($im, $filename.".png");
 
 		$s3Client->putObject([
 			'Bucket' => $bwBucket,
 			'Key'    => ($filename.".png"),
-			'SourceFile' => $bwImage,
+			'SourceFile' => $filename.".png",
 		]);
 		$bwUrl = $s3Client->getObjectUrl($bwBucket, ($filename.".png"));
+		imagedestroy($im);
 
+
+		// mySQL query
 		$query = $rdsConnection->prepare("INSERT INTO records (id, email, phone, s3-raw-url, s3-finished-url, status,reciept) VALUES (NULL,?,?,?,?,?,?)");
 
 		if (!$query){
