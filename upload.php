@@ -23,9 +23,7 @@
 		);
 
 		foreach ($filesToUpload as $upload) {
-			$result = $s3Client->putObject($upload);
-			echo $result;
-			
+			$result = $s3Client->putObject($upload);			
 			unset($upload["SourceFile"]); // Prepare for a waiter
 			$s3Client->waitUntil('ObjectExists', $upload);
 
@@ -36,14 +34,17 @@
 
 		// mySQL query
 		if (getRDShost()){
+			$successUpload = true;
+
 			connectToRDSInstance();
 
-			$query = $rdsConnection->prepare("INSERT INTO records (id, email, phone, s3-raw-url, s3-finished-url, status,reciept) VALUES (NULL,?,?,?,?,?,?)");
+			$query = $rdsConnection->prepare("INSERT INTO `records` (`id`, `email`, `phone`, `s3-raw-url`, `s3-finished-url`, `status`, `receipt`) VALUES (NULL, ?, ?, ?, ?, ?, ?)");
 
 			if (!$query){
 				echo "Prepare failed: (".$rdsConnection->errno.") ".$rdsConnection->error;
 			}else{
-				echo $query->bind_param("ssssii", $_POST["email"], $_POST["phone"], $urlsUploaded[0], $urlsUploaded[1], 1, uniqid());
+				$reciept = 1;
+				echo $query->bind_param("ssssii", $_POST["email"], $_POST["phone"], $urlsUploaded[0], $urlsUploaded[1], $receipt, uniqid());
 			}
 		}
 	}
@@ -80,8 +81,16 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-8 offset-lg-2 text-center">
+				<?php if (isset($successUpload)):?>
+				<div class="alert alert-success" style="margin-bottom: 40px;">
+					<h4>Hooray!</h4>
+					<p>Photo uploaded successfully. Feel free to add more or visit our gallery section.</p>
+					<p><a href="gallery.php" class="btn btn-outline-info">Gallery</a></p>
+				</div>
+				<?php endif;?>
+
 				<?php if (!getRDShost()):?>
-				<div class="alert alert-dismissible alert-warning" style="margin-bottom: 40px;">
+				<div class="alert alert-warning" style="margin-bottom: 40px;">
 					<h4>Heads up!</h4>
 					<p>Database for this website is still being loaded, so upload capability might be restricted. Sorry for any inconveniences and please check again later!</p>
 					<p><a href="upload.php" class="btn btn-outline-info">Reload this page</a></p>
