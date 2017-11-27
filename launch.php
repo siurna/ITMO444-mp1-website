@@ -1,17 +1,16 @@
 <?php
 	require("init.php");
 
-	/* Sets up S3 buckets */
+	/* S3 buckets */
 	if (!empty($s3CreateBuckets = getS3BucketsNeeded())){
 		foreach ($s3CreateBuckets as $createBucket) {
 			$s3BucketName = uniqid($awsPrefix.$createBucket);
 			
-			$s3Client->createBucket(['Bucket' => $s3BucketName, "ACL" => 'public-read']); //public read only
-			$s3Client->waitUntil('BucketExists', ['Bucket' => $s3BucketName]);
+			$s3Client->waitUntil("BucketExists", ["Bucket" => $s3BucketName]);
 		}
 	}
 
-	/* Sets up RDS database */
+	/* RDS database */
 	if (!getRDShost()){ 
 		$rdsClient->createDBInstance([
 			'AllocatedStorage' => 5,
