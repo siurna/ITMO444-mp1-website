@@ -55,7 +55,7 @@
 <html>
 <head>
 	<link rel="stylesheet" href="https://bootswatch.com/4/sketchy/bootstrap.min.css">
-	<title>Upload – Gallery</title>
+	<title>Upload – MP1</title>
 
 	<style>
 		.container{

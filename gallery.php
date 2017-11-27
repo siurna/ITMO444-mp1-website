@@ -7,7 +7,7 @@
 <html>
 <head>
 	<link rel="stylesheet" href="https://bootswatch.com/4/sketchy/bootstrap.min.css">
-	<title>Upload – Gallery</title>
+	<title>Gallery – MP1</title>
 
 	<style>
 		.container{
@@ -31,12 +31,11 @@
 	</style>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/core.js"></script>
-	<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+	<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.js"></script>
 
 	<script type="text/javascript">
-		// init Masonry
 		var $grid = $('.gallery').masonry({
-		  columnWidth: ".image-dummy"
+		  columnWidth: ".image-dummy",
 		  itemSelector: ".image"
 		});
 
@@ -75,8 +74,8 @@
 									$colorImg = $s3Client->getCommand('GetObject', [ "Bucket" => $colorBucket, "Key" => $p["s3-raw-url"] ]);
 									$bwImg = $s3Client->getCommand('GetObject', [ "Bucket" => $bwBucket, "Key" => $p["s3-finished-url"] ]);
 
-									echo '<img src="'.$s3Client->createPresignedRequest($colorImg, '+1 day')->getUri().'"/>';
-									echo '<img src="'.$s3Client->createPresignedRequest($bwImg, '+1 day')->getUri().'"/>';
+									//echo '<img src="'.$s3Client->createPresignedRequest($colorImg, '+1 day')->getUri().'"/>';
+									echo '<div class="image"><img src="'.$s3Client->createPresignedRequest($bwImg, '+1 day')->getUri().'"/></div>';
 								}
 							}
 						?>
