@@ -19,14 +19,14 @@
 		// Generating BW image
 
 		$im = imagecreatefrompng($_FILES['image']['tmp_name']);
-    	imagepng($im, $filename.".png");
+    	imagepng($im, "/var/www/html/tmp_img/".$filename.".png");
 
 		$s3Client->putObject([
 			'Bucket' => $bwBucket,
 			'Key'    => ($filename.".png"),
 			'SourceFile' => $filename.".png",
 		]);
-		$bwUrl = $s3Client->getObjectUrl($bwBucket, ($filename.".png"));
+		$bwUrl = $s3Client->getObjectUrl($bwBucket, "/var/www/html/tmp_img/".$filename.".png");
 		imagedestroy($im);
 
 
