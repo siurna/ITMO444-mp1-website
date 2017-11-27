@@ -29,6 +29,22 @@
 			opacity: 0.4;
 		}
 	</style>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/core.js"></script>
+	<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+
+	<script type="text/javascript">
+		// init Masonry
+		var $grid = $('.gallery').masonry({
+		  columnWidth: ".image-dummy"
+		  itemSelector: ".image"
+		});
+
+		// layout Masonry after each image loads
+		$grid.imagesLoaded().progress( function() {
+		  $grid.masonry('layout');
+		});
+	</script>
 </head>
 <body>
 	<div class="container">
@@ -52,16 +68,20 @@
 							$picures = $rdsConnection->query("SELECT `s3-raw-url`, `s3-finished-url` FROM records;");
 							$colorBucket = describeS3Bucket("color");
 							$bwBucket = describeS3Bucket("grayscale");
-
+					?>
+					<div class="gallery row">
+						<div class="col-lg-3 image-dummy"></div>
+					<?php
 							foreach ($picures as $p) {
 								$colorImg = $s3Client->getCommand('GetObject', [ "Bucket" => $colorBucket, "Key" => $p["s3-raw-url"] ]);
 								$bwImg = $s3Client->getCommand('GetObject', [ "Bucket" => $bwBucket, "Key" => $p["s3-finished-url-url"] ]);
 
-								echo '<img src="'.$s3Client->createPresignedRequest($colorImg, '+1 day').'"/>';
-								echo '<img src="'.$s3Client->createPresignedRequest($bwImg, '+1 day').'"/>';
+								echo '<img src="'.$s3Client->createPresignedRequest($colorImg, '+1 day')->getUri().'"/>';
+								echo '<img src="'.$s3Client->createPresignedRequest($bwImg, '+1 day')->getUri().'"/>';
 							}
 						}
 					?>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -7,6 +7,7 @@
 		$urlsUploaded = array();
 
 		$bwImage = imagecreatefrompng($_FILES['image']['tmp_name']);
+		imagefilter($bwImage, IMG_FILTER_GRAYSCALE);
     	imagepng($bwImage, "/var/www/html/tmp_img/".$filename."png");
 
 		$filesToUpload = array(
