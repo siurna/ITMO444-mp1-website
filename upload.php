@@ -1,34 +1,40 @@
 <?php
-	/* Processing form submission */
+	require("init.php");
 
+echo describeS3Bucket("color");
+die;
+
+	/* Processing form submission */
 	if (isset($_FILES['image']['tmp_name'])){
 		$colorBucket = describeS3Bucket("color");
 		$bwBucket = describeS3Bucket("grayscale");
 
 		$filename = uniqid("img-");
-		$extention = ".".pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION)
+		$extention = ".".pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
 
 		$s3Client->putObject([
 			'Bucket' => $colorBucket,
 			'Key'    => ($filename.$extention),
 			'SourceFile' => $_FILES['image']['tmp_name'],
 		]);
-
 		$colorUrl = $s3Client->getObjectUrl($colorBucket, ($filename.$extention));
 
+		// Generating BW image
+		ob_start();
+		imagepng(imagefilter(imagecreatefrompng($_FILES['image']['tmp_name']), IMG_FILTER_GRAYSCALE))
+		$bwImage = ob_get_clean();
 
 		$s3Client->putObject([
 			'Bucket' => $bwBucket,
 			'Key'    => ($filename.".png"),
-			'SourceFile' => imagepng(imagefilter(imagecreatefrompng($_FILES['image']['tmp_name']), IMG_FILTER_GRAYSCALE)),
+			'SourceFile' => $bwImage,
 		]);
-
 		$bwUrl = $s3Client->getObjectUrl($bwBucket, ($filename.".png"));
 
 		$query = $rdsConnection->prepare("INSERT INTO records (id, email, phone, s3-raw-url, s3-finished-url, status,reciept) VALUES (NULL,?,?,?,?,?,?)");
 
 		if (!$query){
-			echo "Prepare failed: (" . $mysqli->errno . ") " . $mysqli->error;
+			echo "Prepare failed: (".$mysqli->errno.") ".$mysqli->error;
 		}else{
 			echo $query->bind_param("ssssii", $_POST["email"], $_POST["phone"], $colorUrl, $bwUrl, 1, uniqid());
 		}
@@ -61,14 +67,12 @@
 			opacity: 0.4;
 		}
 	</style>
-
-	<?php require("init.php"); ?>
 </head>
 <body>
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-8 offset-lg-2 text-center">
-				<?php if (!getRDShost()){?>
+				<?php if (!getRDShost()):?>
 				<div class="alert alert-dismissible alert-warning" style="margin-bottom: 40px;">
 					<h4>Heads up!</h4>
 					<p>Database for this website is still being loaded, so upload capability might be restricted. Sorry for any inconveniences and please check again later!</p>

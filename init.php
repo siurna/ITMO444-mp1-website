@@ -20,8 +20,8 @@
 		$s3Buckets = $s3Client->listBuckets();
 
 		foreach ($s3Buckets["Buckets"] as $bucket)
-			if (strpos($bucket[0]["Name"], $nameNeeded) !== false)
-				return $bucket[0]["Name"];
+			if (strpos($bucket["Name"], $nameNeeded) !== false)
+				return $bucket["Name"];
 
 		return false;
 	}
