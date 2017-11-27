@@ -24,9 +24,9 @@
 		$s3Client->putObject([
 			'Bucket' => $bwBucket,
 			'Key'    => ($filename.".png"),
-			'SourceFile' => $filename.".png",
+			'SourceFile' => "/var/www/html/tmp_img/".$filename.".png",
 		]);
-		$bwUrl = $s3Client->getObjectUrl($bwBucket, "/var/www/html/tmp_img/".$filename.".png");
+		$bwUrl = $s3Client->getObjectUrl($bwBucket, $filename.".png");
 		imagedestroy($im);
 
 
