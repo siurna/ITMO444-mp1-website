@@ -30,9 +30,6 @@
 		}
 	</style>
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/core.js"></script>
-	<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.js"></script>
-
 	<script type="text/javascript">
 		var $grid = $('.gallery').masonry({
 		  columnWidth: ".image-dummy",
@@ -84,5 +81,8 @@
 			</div>
 		</div>
 	</div>
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/core.js"></script>
+	<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.js"></script>
 </body>
 </html>
