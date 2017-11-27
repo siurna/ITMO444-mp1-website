@@ -31,15 +31,18 @@
 	</style>
 
 	<script type="text/javascript">
-		var $grid = $('.gallery').masonry({
-		  columnWidth: ".image-dummy",
-		  itemSelector: ".image"
-		});
-
-		// layout Masonry after each image loads
-		$grid.imagesLoaded().progress( function() {
-		  $grid.masonry('layout');
-		});
+	$(document).ready(function(){
+	      var options =
+	      {
+	           srcNode: '.image',             // grid items (class, node)
+	           margin: '10px',             // margin in pixel, default: 0px
+	           width: $(".image-dummy").width()+"px",             // grid item width in pixel, default: 220px
+	           max_width: '',              // dynamic gird item width if specified, (pixel)
+	           resizable: true,            // re-layout if window resize
+	           transition: 'all 0.5s ease' // support transition for CSS3, default: all 0.5s ease
+	      }
+	      document.querySelector('.gallery').gridify(options);
+	})
 	</script>
 </head>
 <body>
@@ -58,7 +61,7 @@
 					<h1>Gallery</h1> <a href="/upload.php" class="btn btn-primary btn-md">Upload a picture</a> <hr/>
 
 					<div class="gallery row">
-						<div class="col-lg-3 image-dummy"></div>
+						<div class="col-lg-3 image-dummy">&nbsp;</div>
 						<?php
 							if (getRDShost()){
 								connectToRDSInstance();
@@ -72,7 +75,7 @@
 									$bwImg = $s3Client->getCommand('GetObject', [ "Bucket" => $bwBucket, "Key" => $p["s3-finished-url"] ]);
 
 									//echo '<img src="'.$s3Client->createPresignedRequest($colorImg, '+1 day')->getUri().'"/>';
-									echo '<div class="image"><img src="'.$s3Client->createPresignedRequest($bwImg, '+1 day')->getUri().'"/></div>';
+									echo '<div class="image"><img style="width:100%" src="'.$s3Client->createPresignedRequest($bwImg, '+1 day')->getUri().'"/></div>';
 								}
 							}
 						?>
@@ -81,8 +84,8 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/core.js"></script>
-	<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.js"></script>
+	<script src="https://raw.githubusercontent.com/hongkhanh/gridify/master/javascript/gridify-min.js"></script>
 </body>
 </html>
