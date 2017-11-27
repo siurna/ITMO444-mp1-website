@@ -49,7 +49,11 @@
 						if (getRDShost()){
 							connectToRDSInstance();
 
-							print_r($rdsConnection->query("SELECT * FROM records;"));
+							$picures = $rdsConnection->query("SELECT `s3-raw-url`, `s3-finished-url` FROM records;");
+
+							foreach ($picures as $p) {
+								print_r($p);
+							}
 						}
 					?>
 				</div>
