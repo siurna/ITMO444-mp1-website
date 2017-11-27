@@ -3,32 +3,34 @@
 
 	/* Processing form submission */
 	if (isset($_FILES['image']['tmp_name'])){
-		$colorBucket = describeS3Bucket("color");
-		$bwBucket = describeS3Bucket("grayscale");
-
 		$filename = uniqid("img-");
-		$extention = ".".pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+		$urlsUploaded = array();
 
-		$s3Client->putObject([
-			'Bucket' => $colorBucket,
-			'Key'    => $filename.$extention,
-			'SourceFile' => $_FILES['image']['tmp_name'],
-		]);
-		$colorUrl = $s3Client->getObjectUrl($colorBucket, $filename.$extention);
+		$bwImage = imagecreatefrompng($_FILES['image']['tmp_name']);
+    	imagepng($bwImage, "/var/www/html/tmp_img/".$filename.".png");
 
-		// Generating BW image
+		$filesToUpload = array(
+			0 => array(
+				"Bucket" => describeS3Bucket("color"),
+				"Key" => $filename.".".pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION),
+				"SourceFile" => $_FILES['image']['tmp_name']
+			),
+			1 => array(
+				"Bucket" => describeS3Bucket("grayscale"),
+				"Key" => $filename.".png",
+				"SourceFile" => $bwImage
+			)
+		);
 
-		$im = imagecreatefrompng($_FILES['image']['tmp_name']);
-    	imagepng($im, "/var/www/html/tmp_img/".$filename.".png");
+		foreach ($filesToUpload as $upload) {
+			$s3Client->putObject($upload);
+			unset($upload["SourceFile"]); // Prepare for a waiter
+			$s3Client->waitUntil('ObjectExists', $upload);
 
-		$s3Client->putObject([
-			'Bucket' => $bwBucket,
-			'Key'    => ($filename.".png"),
-			'SourceFile' => "/var/www/html/tmp_img/".$filename.".png",
-		]);
-		$bwUrl = $s3Client->getObjectUrl($bwBucket, $filename.".png");
-		imagedestroy($im);
+			array_push($urlsUploaded, $s3Client->getObjectUrl($upload["Bucket"], $upload["Key"]));
+		}
 
+		imagedestroy($bwImage);
 
 		// mySQL query
 		if (getRDShost()){
@@ -39,7 +41,7 @@
 			if (!$query){
 				echo "Prepare failed: (".$rdsConnection->errno.") ".$rdsConnection->error;
 			}else{
-				echo $query->bind_param("ssssii", $_POST["email"], $_POST["phone"], $colorUrl, $bwUrl, 1, uniqid());
+				echo $query->bind_param("ssssii", $_POST["email"], $_POST["phone"], $urlsUploaded[0], $urlsUploaded[1], 1, uniqid());
 			}
 		}
 	}
@@ -85,7 +87,7 @@
 				<?php endif;?>
 				
 				<div class="well">
-					<h1>Upload image</h1><hr/>
+					<h1>Upload an image</h1><hr/>
 
 					<form action="" method="POST" enctype="multipart/form-data">
 						<div class="row">
