@@ -5,14 +5,11 @@
 	if (!empty($s3CreateBuckets = getS3BucketsNeeded())){
 		foreach ($s3CreateBuckets as $createBucket) {
 			$s3BucketName = uniqid($awsPrefix.$createBucket);
-			echo "Creating bucket named {$s3BucketName}\n";
 			
 			$s3Client->createBucket(['Bucket' => $s3BucketName]);
 			$s3Client->waitUntil('BucketExists', ['Bucket' => $s3BucketName]);
 		}
 	}
-
-	die;
 
 	/* Sets up RDS database */
 	if (!getRDShost()){ 
