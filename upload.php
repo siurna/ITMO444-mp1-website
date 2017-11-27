@@ -11,10 +11,10 @@
 
 		$s3Client->putObject([
 			'Bucket' => $colorBucket,
-			'Key'    => ($filename.$extention),
+			'Key'    => $filename.$extention,
 			'SourceFile' => $_FILES['image']['tmp_name'],
 		]);
-		$colorUrl = $s3Client->getObjectUrl($colorBucket, ($filename.$extention));
+		$colorUrl = $s3Client->getObjectUrl($colorBucket, $filename.$extention);
 
 		// Generating BW image
 
@@ -37,7 +37,7 @@
 			$query = $rdsConnection->prepare("INSERT INTO records (id, email, phone, s3-raw-url, s3-finished-url, status,reciept) VALUES (NULL,?,?,?,?,?,?)");
 
 			if (!$query){
-				echo "Prepare failed: (".$mysqli->errno.") ".$mysqli->error;
+				echo "Prepare failed: (".$rdsConnection->errno.") ".$rdsConnection->error;
 			}else{
 				echo $query->bind_param("ssssii", $_POST["email"], $_POST["phone"], $colorUrl, $bwUrl, 1, uniqid());
 			}
