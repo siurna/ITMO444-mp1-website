@@ -50,10 +50,15 @@
 							connectToRDSInstance();
 
 							$picures = $rdsConnection->query("SELECT `s3-raw-url`, `s3-finished-url` FROM records;");
+							$colorBucket = describeS3Bucket("color");
+							$bwBucket = describeS3Bucket("grayscale");
 
 							foreach ($picures as $p) {
-								echo '<img src="'.$p["s3-raw-url"].'"/>';
-								echo '<img src="'.$p["s3-finished-url"].'"/>';
+								$colorImg = $s3Client->getCommand('GetObject', [ "Bucket" => $colorBucket, "Key" => $p["s3-raw-url"] ]);
+								$bwImg = $s3Client->getCommand('GetObject', [ "Bucket" => $bwBucket, "Key" => $p["s3-finished-url-url"] ]);
+
+								echo '<img src="'.$s3Client->createPresignedRequest($colorImg, '+1 day').'"/>';
+								echo '<img src="'.$s3Client->createPresignedRequest($bwImg, '+1 day').'"/>';
 							}
 						}
 					?>

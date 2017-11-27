@@ -29,6 +29,6 @@
 
 		connectToRDSInstance();
 
-	    $rdsConnection->query("CREATE TABLE IF NOT EXISTS records (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `email` VARCHAR(32), `phone` VARCHAR(32), `s3-raw-url` VARCHAR(250), `s3-finished-url` VARCHAR(250), `status` INT(1), `receipt` BIGINT);");
+	    $rdsConnection->query("CREATE TABLE IF NOT EXISTS records (`id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY, `email` VARCHAR(32), `phone` VARCHAR(32), `s3-raw-url` VARCHAR(100), `s3-finished-url` VARCHAR(100), `status` INT(1), `receipt` BIGINT);");
 	}
 ?>
