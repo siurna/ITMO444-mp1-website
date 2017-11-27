@@ -63,7 +63,7 @@
 									$bwImg = $s3Client->getCommand('GetObject', [ "Bucket" => $bwBucket, "Key" => $p["s3-finished-url"] ]);
 
 									//echo '<img src="'..'"/>';
-									echo '<a href="'.$s3Client->createPresignedRequest($colorImg, '+1 day')->getUri().'" class="image" data-lightbox="'.$colorImg.'"><img style="width:100%" src="'.$s3Client->createPresignedRequest($bwImg, '+1 day')->getUri().'"/></a>';
+									echo '<a href="'.$s3Client->createPresignedRequest($colorImg, '+1 day')->getUri().'" class="image" data-lightbox="'.$p["s3-raw-url"].'"><img style="width:100%" src="'.$s3Client->createPresignedRequest($bwImg, '+1 day')->getUri().'"/></a>';
 								}
 							}
 						?>
