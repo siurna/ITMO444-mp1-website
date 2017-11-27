@@ -44,7 +44,7 @@
 				echo "Prepare failed: (".$rdsConnection->errno.") ".$rdsConnection->error;
 			}else{
 				$reciept = 1;
-				echo $query->bind_param("ssssii", $_POST["email"], $_POST["phone"], $urlsUploaded[0], $urlsUploaded[1], $receipt, uniqid());
+				$query->bind_param("ssssii", $_POST["email"], $_POST["phone"], $urlsUploaded[0], $urlsUploaded[1], $receipt, uniqid())->execute();
 			}
 		}
 	}
