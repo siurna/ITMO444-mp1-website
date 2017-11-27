@@ -13,18 +13,24 @@
 			0 => array(
 				"Bucket" => describeS3Bucket("color"),
 				"Key" => $filename.pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION),
-				"SourceFile" => $_FILES['image']['tmp_name']
+				"SourceFile" => $_FILES['image']['tmp_name'],
+				"ACL" => "private|public-read|public-read-write|authenticated-read|aws-exec-read|bucket-owner-read|bucket-owner-full-control"
 			),
 			1 => array(
 				"Bucket" => describeS3Bucket("grayscale"),
 				"Key" => $filename."png",
-				"SourceFile" => "/var/www/html/tmp_img/".$filename.".png"
+				"SourceFile" => "/var/www/html/tmp_img/".$filename.".png",
+				"ACL" => "private|public-read|public-read-write|authenticated-read|aws-exec-read|bucket-owner-read|bucket-owner-full-control"
 			)
 		);
 
 		foreach ($filesToUpload as $upload) {
-			$result = $s3Client->putObject($upload);			
-			unset($upload["SourceFile"]); // Prepare for a waiter
+			$result = $s3Client->putObject($upload);	
+
+			// Prepare for a waiter
+			unset($upload["SourceFile"]); 
+			unset($upload["ACL"]); 
+
 			$s3Client->waitUntil('ObjectExists', $upload);
 
 			array_push($urlsUploaded, $s3Client->getObjectUrl($upload["Bucket"], $upload["Key"]));
