@@ -14,13 +14,15 @@
 			0 => array(
 				"Bucket" => describeS3Bucket("color"),
 				"Key" => $filename.pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION),
-				"SourceFile" => $_FILES['image']['tmp_name']
+				"SourceFile" => $_FILES['image']['tmp_name'],
+				"ACL" => "public-read"
 			),
 			1 => array(
 				"Bucket" => describeS3Bucket("grayscale"),
 				"Key" => $filename."png",
-				"SourceFile" => "/var/www/html/tmp_img/".$filename."png"
-				)
+				"SourceFile" => "/var/www/html/tmp_img/".$filename."png",
+				"ACL" => "public-read"
+			)
 		);
 
 		foreach ($filesToUpload as $upload) {
