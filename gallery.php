@@ -1,8 +1,4 @@
-<?php
-	require("init.php");
-
-?>
-
+<?php require("init.php"); ?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -30,15 +26,7 @@
 <body>
 	<div class="container">
 		<div class="row">
-			<div class="col-lg-10 offset-lg-1 text-center">
-				<?php if (!getRDShost()):?>
-				<div class="alert alert-warning" style="margin-bottom: 40px;">
-					<h4>Heads up!</h4>
-					<p>Database for this website is still being loaded, so gallery capability might be restricted. Sorry for any inconveniences and please check again later!</p>
-					<p><a href="gallery.php" class="btn btn-outline-info">Reload this page</a></p>
-				</div>
-				<?php endif;?>
-				
+			<div class="col-lg-10 offset-lg-1 text-center">	
 				<div class="well">
 					<h1>Gallery</h1> <a href="/upload.php" class="btn btn-primary btn-md">Upload a picture</a> <hr/>
 
@@ -49,19 +37,18 @@
 								connectToRDSInstance();
 
 								$picures = $rdsConnection->query("SELECT `s3-raw-url`, `s3-finished-url` FROM records ORDER BY `id` DESC;");
+
 								$colorBucket = describeS3Bucket("color");
 								$bwBucket = describeS3Bucket("grayscale");
 
 								foreach ($picures as $p) {
-									$colorImg = $s3Client->getCommand('GetObject', [ "Bucket" => $colorBucket, "Key" => $p["s3-raw-url"] ]);
-									$bwImg = $s3Client->getCommand('GetObject', [ "Bucket" => $bwBucket, "Key" => $p["s3-finished-url"] ]);
+									$colorImg = $s3Client->getObject(["Bucket" => $colorBucket, "Key" => $p["s3-raw-url"]]);
+									$colorImg = $colorImg["@metadata"]["effectiveUri"];
 
-									echo "Image url: ";
-									$colorUrl = $s3Client->getObject(["Bucket" => $colorBucket, "Key" => $p["s3-raw-url"]]);
-									echo $colorUrl["@metadata"]["effectiveUri"];
-									echo "<hr/>";
+									$bwImg = $s3Client->getObject(["Bucket" => $bwBucket, "Key" => $p["s3-finished-url"]]);
+									$bwImg = $bwImg["@metadata"]["effectiveUri"];
 
-									//echo '<a href="'.$s3Client->createPresignedRequest($colorImg, '+1 day')->getUri().'" class="image" data-lightbox="'.$p["s3-raw-url"].'"><img style="width:100%" src="'.$s3Client->createPresignedRequest($bwImg, '+1 day')->getUri().'"/></a>';
+									echo '<a href="'.$colorImg.'" class="image" data-lightbox="'.$p["s3-raw-url"].'"><img style="width:100%" src="'.$bwImg.'"/></a>';
 								}
 							}
 						?>
